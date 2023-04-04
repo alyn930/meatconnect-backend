@@ -134,7 +134,7 @@ app.post("/post/retrieveById/", function(req, res){
   })
 })
 
-app.get("/insert/cart", function(req, res){
+app.post("/insert/cart", function(req, res){
   let user_id = req.body.user_id;
   let product_id = req.body.product_id;
   let quantity = req.body.quantity;
@@ -153,4 +153,15 @@ app.get("/insert/cart", function(req, res){
     res.send("Please input the needed fields");
     res.end();
   }
+})
+
+app.get("/user/retrieve/:id", function(req, res){
+  conn.query("SELECT * FROM user WHERE user_id = ?" , [req.params.id], function(error, rows, fields){
+    if(error) throw error;
+    else{
+      res.send(rows);
+      console.log(rows);
+      res.end();
+    }
+  })
 })
