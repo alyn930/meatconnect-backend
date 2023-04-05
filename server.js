@@ -232,19 +232,23 @@ app.get("/message/retrieveById/:id", function (req, res) {
   );
 });
 
-app.get("/message/retrieve", function(req, res){
+app.get("/message/retrieve", function (req, res) {
   let receiver_id = req.body.receiver_id;
   let sender_id = req.body.sender_id;
 
-  conn.query("SELECT * FROM message WHERE receiver_id = ? AND sender_id = ?", [receiver_id, sender_id], function(error, rows, fields){
-    if(error) throw error;
-    else{
-      res.send(rows);
-      console.log(rows);
-      res.end();
+  conn.query(
+    "SELECT * FROM message WHERE receiver_id = ? AND sender_id = ?",
+    [receiver_id, sender_id],
+    function (error, rows, fields) {
+      if (error) throw error;
+      else {
+        res.send(rows);
+        console.log(rows);
+        res.end();
+      }
     }
-  })
-})
+  );
+});
 
 app.post("/message/update", function (req, res) {
   let message_id = req.body.message_id;
@@ -265,8 +269,45 @@ app.post("/message/update", function (req, res) {
         }
       }
     );
-  }else{
+  } else {
     res.send("Please input the needed fields");
+    res.end();
+  }
+});
+
+app.post("/product/insert", function (req, res) {
+  let livestock_animal_id = req.body.livestock_animal_id;
+  let livestock_animal_name = req.body.livestock_animal_name;
+  let livestock_animal_type = req.body.livestock_animal_type;
+  let livestock_animal_detail = req.body.livestock_animal_detail;
+  let livestock_animal_photo = req.body.livestock_animal_photo;
+
+  if (
+    livestock_animal_id &&
+    livestock_animal_name &&
+    livestock_animal_type &&
+    livestock_animal_detail &&
+    livestock_animal_photo
+  ) {
+    conn.query(
+      "INSERT INTO animal_category (livestock_animal_id, livestock_animal_name, livestock_animal_type, livestock_animal_detail, livestock_animal_photo) VALUES (?,?,?,?,?)",
+      [
+        livestock_animal_id,
+        livestock_animal_name,
+        livestock_animal_type,
+        livestock_animal_detail,
+        livestock_animal_photo,
+      ],
+      function (error, rows, fields) {
+        if (error) throw error;
+        else {
+          res.send(rows);
+          console.log(rows);
+        }
+      }
+    );
+  } else {
+    res.send("Please input needed fields");
     res.end();
   }
 });
